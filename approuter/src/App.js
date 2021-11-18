@@ -5,9 +5,9 @@ import {Routes,Route,Link,Outlet} from 'react-router-dom';
 function Encabezado(){
   return(
     <header>
-      <nav class="nav">
-        <span class="nav-link"><Link to="/">Home</Link></span>
-        <span class="nav-link"><Link to="/puntajes">Puntajes</Link></span>        
+      <nav className="nav">
+        <span className="nav-link"><Link to="/">Home</Link></span>
+        <span className="nav-link"><Link to="/puntajes">Puntajes</Link></span>        
       </nav>      
     </header>
   )
@@ -16,10 +16,10 @@ function Encabezado(){
 function Home(){
   return(
     <div>
-      <nav class="nav">
-        <span class="nav-link"><Link to="/">Principal</Link></span>
-        <span class="nav-link"><Link to="/juego">Juego</Link></span>        
-        <span class="nav-link"><Link to="/about">About</Link></span>        
+      <nav className="nav">
+        <span className="nav-link"><Link to="/">Principal</Link></span>
+        <span className="nav-link"><Link to="/juego">Juego</Link></span>        
+        <span className="nav-link"><Link to="/about">About</Link></span>        
       </nav>
       <Outlet/>       
     </div>
@@ -62,12 +62,49 @@ function About(){
 class Juego extends React.Component{
   constructor(){
     super()
+    this.state={
+      info:null
+    }
+  }
+
+  componentDidMount(){
+    fetch('http://localhost:8080/cartas')
+      .then(res=>res.json())
+        .then(datos=>{
+          //console.log(datos)
+          this.setState({
+            info:datos
+          })
+        })
+        .catch(err=>{
+          console.log("Servidor desconectado")
+          console.log(err)
+        })
+  }
+  
+  comunica =  async()=>{
+    //Consumiendo el servicio POST  
+    const respuesta = await fetch('http://localhost:8080/carta',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          mensaje:"Enviando JSON"
+        })
+      })
+    
+      //Imprimir lo que responde el servidor
+      const data = await respuesta.json()
+      console.log(data)
   }
 
   render(){
+    console.log(this.state)
     return(
       <div>
         <h1>Cartas</h1>
+        <button type="button" onClick={this.comunica()} className="btn btn-primary">Consume POST</button>
       </div>
     )
   }

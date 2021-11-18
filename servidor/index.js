@@ -5,19 +5,21 @@ const app= express()
 app.use(cors())
 app.use(express.json())
 
+let info={
+    cartas:[{
+        mazo:"Corazones",
+        descripcion:"K",
+        valor:"10"
+    },{
+        mazo:"Corazones",
+        descripcion:"7",
+        valor:"7"    
+    }],
+    id: 1
+}
+
 app.get('/cartas',(req,res)=>{
-    res.json({
-        cartas:[{
-            mazo:"Corazones",
-            descripcion:"K",
-            valor:"10"
-        },{
-            mazo:"Corazones",
-            descripcion:"7",
-            valor:"7"    
-        }],
-        id: 1
-    })
+    res.json(info)
 })
 
 app.post('/carta',(req,res)=>{
