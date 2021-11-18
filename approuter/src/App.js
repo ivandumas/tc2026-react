@@ -1,5 +1,6 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import {Routes,Route,Link,Outlet} from 'react-router-dom';
+import FormularioCarta from "./components/FormularioCarta";
 
 
 function Encabezado(){
@@ -44,9 +45,44 @@ function Error404(){
 }
 
 function Principal(){
+  //Definicion del estado
+  //const [numCartas,setNumCartas]=useState(2)
+  //const [jugador,setJugador]=useState('')
+  //Inicilización del estado (constructor)
+  const [state,setState]=useState({
+    numCartas:2,
+    jugador:'',
+    turno:''
+  })
+
+  //ComponentDidMount
+  useEffect(()=>{
+    console.log('Effect componentDidMount!')
+    fetch('http://localhost:8080/cartas')
+      .then(res=>res.json())
+        .then(datos=>{
+          console.log(datos)          
+        })
+        .catch(err=>{
+          console.log("Servidor desconectado")
+          console.log(err)
+        })
+  },[])
+
+  //ComponentDidUpdate
+  useEffect(()=>{
+    //if(state.jugador!==''){
+      console.log("Effect componentDidUpdate")
+    //}
+  })
+  
+  //Render
   return(
-    <div>
+    <div className="container">
       <h1>Principal</h1>
+      <input value={state.jugador} onChange={(e)=>setState({...state,jugador:e.target.value})}/>
+      <p>Numero de cartas: {state.numCartas} del jugador: {state.jugador}</p>
+      <button className="btn btn-danger" onClick={()=>setState({...state,numCartas:state.numCartas+1})}>Pedir carta</button>
     </div>
   )
 }
@@ -58,6 +94,8 @@ function About(){
     </div>
   )
 }
+
+
 
 class Juego extends React.Component{
   constructor(){
@@ -81,8 +119,12 @@ class Juego extends React.Component{
           console.log(err)
         })
   }
+
+  componentDidUpdate(){
+    console.log("Componente actualizado")
+  }
   
-  comunica =  async()=>{
+  async comunica(info){
     //Consumiendo el servicio POST  
     const respuesta = await fetch('http://localhost:8080/carta',{
         method:'POST',
@@ -103,8 +145,9 @@ class Juego extends React.Component{
     console.log(this.state)
     return(
       <div>
-        <h1>Cartas</h1>
-        <button type="button" onClick={this.comunica()} className="btn btn-primary">Consume POST</button>
+        <h1>Juego</h1>
+        {/*<button type="button" onClick={this.comunica.bind(this,"hola")} className="btn btn-primary">Consume POST</button>*/}
+        <FormularioCarta></FormularioCarta>
       </div>
     )
   }
