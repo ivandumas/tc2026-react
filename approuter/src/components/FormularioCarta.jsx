@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
+//useEffect<---componentDidMount,componentDidUpdate,componentWillUnMount
 
 function FormularioCarta(){
     //inicialización
@@ -8,6 +9,23 @@ function FormularioCarta(){
         descripcion:'',
         valor:''
     })
+
+    //ComponentDidMount
+    useEffect(()=>{
+        localStorage.setItem('mazo','Corazones')
+        sessionStorage.setItem('login','aceptado')
+    },[])
+
+    //ComponentDidUpdate
+    useEffect(()=>{
+        if(state.descripcion!==''){
+            console.log(localStorage.getItem('mazo'))
+            localStorage.setItem('mazo',state.mazo)
+            console.log(sessionStorage.getItem('login'))
+            
+        }
+    })
+
     //render
     console.log(state)
     return(
